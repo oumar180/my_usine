@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+const API = process.env.REACT_APP_API_URL;
+
 export default function Historique() {
   const [historique, setHistorique] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/jour/historique').then(res => setHistorique(res.data));
+    axios.get(`${API}/jour/historique`).then(res => setHistorique(res.data));
   }, []);
 
   return (
@@ -32,4 +34,4 @@ export default function Historique() {
       </table>
     </div>
   );
-} 
+}

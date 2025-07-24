@@ -1,9 +1,11 @@
 import React from 'react';
 import { FaFileCsv } from 'react-icons/fa';
 
+const API = process.env.REACT_APP_API_URL;
+
 export default function ExportCSV() {
   const handleExport = () => {
-    window.open('http://localhost:5000/api/jour/export', '_blank');
+    window.open(`${API}/jour/export`, '_blank');
   };
 
   return (
@@ -12,4 +14,4 @@ export default function ExportCSV() {
       Exporter l’historique (PDF)
     </button>
   );
-} 
+}

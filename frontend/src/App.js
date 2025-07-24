@@ -9,6 +9,8 @@ import "@fontsource/quicksand";
 import axios from 'axios';
 import ConfirmModal from './components/ConfirmModal';
 
+const API = process.env.REACT_APP_API_URL;
+
 function App() {
   const [refresh, setRefresh] = useState(false);
   const [page, setPage] = useState('dashboard');
@@ -17,7 +19,7 @@ function App() {
   const handleMaj = () => setRefresh(!refresh);
 
   const handleReset = async () => {
-    await axios.delete('http://localhost:5000/api/jour/reset');
+    await axios.delete(`${API}/jour/reset`);
     window.location.reload();
   };
 

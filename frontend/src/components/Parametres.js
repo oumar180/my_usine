@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
+const API = process.env.REACT_APP_API_URL;
+
 export default function Parametres() {
   const [stockInitial, setStockInitial] = useState('');
   const [prixSachet, setPrixSachet] = useState('');
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/parametres').then(res => {
+    axios.get(`${API}/parametres`).then(res => {
       setStockInitial(res.data.stock_initial);
       setPrixSachet(res.data.prix_sachet);
     });
   }, []);
 
   const handleSave = () => {
-    axios.post('http://localhost:5000/api/parametres', {
+    axios.post(`${API}/parametres`, {
       stock_initial: Number(stockInitial),
       prix_sachet: Number(prixSachet)
     }).then(() => setMessage('Paramètres enregistrés !'));
@@ -37,4 +39,4 @@ export default function Parametres() {
       </div>
     </div>
   );
-} 
+}

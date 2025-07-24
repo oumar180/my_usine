@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaIndustry, FaShoppingCart, FaWater, FaEuroSign, FaBoxOpen, FaMoneyBillWave, FaCalculator } from 'react-icons/fa';
 
+const API = process.env.REACT_APP_API_URL;
+
 export default function Dashboard() {
   const [jour, setJour] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/jour/dujour').then(res => setJour(res.data));
+    axios.get(`${API}/jour/dujour`).then(res => setJour(res.data));
   }, []);
 
   if (!jour) return <div>Chargement...</div>;

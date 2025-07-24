@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaIndustry, FaShoppingCart, FaMoneyBillWave } from 'react-icons/fa';
 
+const API = process.env.REACT_APP_API_URL;
+
 export default function FormulaireSaisie({ onMaj }) {
   const [production, setProduction] = useState('');
   const [ventes, setVentes] = useState('');
@@ -10,22 +12,22 @@ export default function FormulaireSaisie({ onMaj }) {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/jour/dujour')
+    axios.get(`${API}/jour/dujour`)
       .then(res => setDepenseDuJour(res.data.depenses ?? 0));
   }, [message, onMaj]);
 
   const handleProduction = () => {
-    axios.post('http://localhost:5000/api/jour/dujour', { production: Number(production) })
+    axios.post(`${API}/jour/dujour`, { production: Number(production) })
       .then(() => { setMessage('Production enregistrée !'); onMaj(); setProduction(''); });
   };
 
   const handleVentes = () => {
-    axios.post('http://localhost:5000/api/jour/dujour', { ventes: Number(ventes) })
+    axios.post(`${API}/jour/dujour`, { ventes: Number(ventes) })
       .then(() => { setMessage('Ventes enregistrées !'); onMaj(); setVentes(''); });
   };
 
   const handleDepenses = () => {
-    axios.post('http://localhost:5000/api/jour/dujour', { depenses: Number(depenses) })
+    axios.post(`${API}/jour/dujour`, { depenses: Number(depenses) })
       .then(() => { setMessage('Dépenses enregistrées !'); onMaj(); setDepenses(''); });
   };
 
@@ -55,4 +57,3 @@ export default function FormulaireSaisie({ onMaj }) {
     </div>
   );
 }
-        
