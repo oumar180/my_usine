@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { supabase } from '../supabaseClient';
 import { FaIndustry, FaShoppingCart, FaWater, FaEuroSign, FaBoxOpen, FaMoneyBillWave, FaCalculator } from 'react-icons/fa';
-
-const API = process.env.REACT_APP_API_URL;
 
 export default function Dashboard() {
   const [jour, setJour] = useState(null);
 
   useEffect(() => {
-    axios.get(`${API}/jour/dujour`).then(res => setJour(res.data));
+    const fetchJour = async () => {
+      const today = new Date().toISOString().slice(0, 10);
+      let { data, error } = await supabase.from('jour').select('*').eq('date', today).limit(1);
+      if (error) return;
+      setJour(data && data.length > 0 ? data[0] : {});
+    };
+    fetchJour();
   }, []);
 
   if (!jour) return <div>Chargement...</div>;

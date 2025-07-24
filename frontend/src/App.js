@@ -6,10 +6,8 @@ import Parametres from './components/Parametres';
 import ExportCSV from './components/ExportCSV';
 import { FaTint } from 'react-icons/fa';
 import "@fontsource/quicksand";
-import axios from 'axios';
+import { supabase } from './supabaseClient';
 import ConfirmModal from './components/ConfirmModal';
-
-const API = process.env.REACT_APP_API_URL;
 
 function App() {
   const [refresh, setRefresh] = useState(false);
@@ -18,8 +16,11 @@ function App() {
 
   const handleMaj = () => setRefresh(!refresh);
 
+  // Réinitialisation : supprime toutes les lignes des tables jour et parametres, puis remet les paramètres par défaut
   const handleReset = async () => {
-    await axios.delete(`${API}/jour/reset`);
+    await supabase.from('jour').delete().neq('id', 0);
+    await supabase.from('parametres').delete().neq('id', 0);
+    await supabase.from('parametres').insert([{ stock_initial: 0, prix_sachet: 10 }]);
     window.location.reload();
   };
 
@@ -50,7 +51,7 @@ function App() {
         {page === 'historique' && <Historique />}
         {page === 'parametres' && <Parametres />}
       </div>
-     <ConfirmModal
+      <ConfirmModal
         open={showConfirm}
         onConfirm={() => { setShowConfirm(false); handleReset(); }}
         onCancel={() => setShowConfirm(false)}

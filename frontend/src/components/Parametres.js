@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-
-const API = process.env.REACT_APP_API_URL;
+import { supabase } from '../supabaseClient';
 
 export default function Parametres() {
   const [stockInitial, setStockInitial] = useState('');
@@ -9,17 +7,21 @@ export default function Parametres() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    axios.get(`${API}/parametres`).then(res => {
-      setStockInitial(res.data.stock_initial);
-      setPrixSachet(res.data.prix_sachet);
-    });
+    const fetchParams = async () => {
+      const { data, error } = await supabase.from('parametres').select('stock_initial,prix_sachet').limit(1);
+      if (error) setMessage("Erreur chargement : " + error.message);
+      if (data && data.length > 0) {
+        setStockInitial(data[0].stock_initial);
+        setPrixSachet(data[0].prix_sachet);
+      }
+    };
+    fetchParams();
   }, []);
 
-  const handleSave = () => {
-    axios.post(`${API}/parametres`, {
-      stock_initial: Number(stockInitial),
-      prix_sachet: Number(prixSachet)
-    }).then(() => setMessage('Paramètres enregistrés !'));
+  const handleSave = async () => {
+    const { error } = await supabase.from('parametres').upsert([{ stock_initial: Number(stockInitial), prix_sachet: Number(prixSachet) }]);
+    if (error) setMessage("Erreur enregistrement : " + error.message);
+    else setMessage('Paramètres enregistrés !');
   };
 
   return (

@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-
-const API = process.env.REACT_APP_API_URL;
+import { supabase } from '../supabaseClient';
 
 export default function Historique() {
   const [historique, setHistorique] = useState([]);
 
   useEffect(() => {
-    axios.get(`${API}/jour/historique`).then(res => setHistorique(res.data));
+    const fetchHistorique = async () => {
+      const { data } = await supabase.from('jour').select('*').order('date', { ascending: false });
+      setHistorique(data || []);
+    };
+    fetchHistorique();
   }, []);
 
   return (
